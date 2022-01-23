@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks'
-import { fetchNasaData, ApiResponse } from './api/nasa'
+import { fetchNasaData } from './api/nasa'
 import Card from './components/Card'
 import Loader from './components/Loader'
 import Navigation from './components/Navigation'
@@ -10,9 +10,9 @@ export function App() {
   const home = pathname === '/'
 
   const [newFavourite, setNewFavourite] = useState(false)
-  const [favourites, setFavourites] = useState({})
+  const [favourites, setFavourites] = useState<any>({})
   const [isLoading, setIsLoading] = useState(true)
-  const [apiResults, setApiResults] = useState([])
+  const [apiResults, setApiResults] = useState<any>([])
 
   useEffect(() => {
     if (home) {
@@ -28,13 +28,15 @@ export function App() {
 
   useEffect(() => {
     if (localStorage.getItem('nasaFavorites')) {
-      const localFavourites = JSON.parse(localStorage.getItem('nasaFavorites'))
+      const localFavourites = JSON.parse(
+        localStorage.getItem('nasaFavorites') || '{}'
+      )
       setFavourites(localFavourites)
     }
   }, [])
 
   const addToFavourite = (itemUrl: string) => {
-    apiResults.forEach((item) => {
+    apiResults.forEach((item: any) => {
       if (item.url.includes(itemUrl) && !favourites[itemUrl]) {
         favourites[itemUrl] = item
         // Show Save Confirmation for 2 seconds
@@ -82,7 +84,7 @@ export function App() {
 
           {pathname !== '/favourites' &&
             apiResults &&
-            apiResults.map((el) => (
+            apiResults.map((el: any) => (
               <Card
                 hdurl={el['hdurl']}
                 url={el['url']}
